@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-light bg-light border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img src="/images/image.png" alt="Employee Payroll System" height="45"></a>
+            <div class="navbar-nav ms-auto d-flex flex-row gap-3">
+                <a class="nav-link text-black" th:href="@{/}">Dashboard</a>
+                <a class="nav-link text-black " th:href="@{/employees}">Employees</a>
+                <a class="nav-link text-black fw-bold" th:href="@{/payroll}">Payroll</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Payroll Management</h1>
+                <p>Manage salary and payroll information</p>
+            </div>
+        </div>
+
+        <!-- Service Status Alert -->
+        <div th:if="${payrollError}" class="alert alert-light border" role="alert">
+            <span th:text="${payrollError}">Payroll service unavailable</span>
+        </div>
+
+
+        <!-- Employee Salary Overview -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card border">
+                    <div class="card-header bg-light">
+                        <h5>Employee Salary Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Code</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Basic Salary</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="employee : ${employees}">
+                                        <td th:text="${employee.employeeCode}">EMP001</td>
+                                        <td th:text="${employee.firstName + ' ' + employee.lastName}">John Doe</td>
+                                        <td th:text="${employee.department}">IT</td>
+                                        <td>$<span th:text="${#numbers.formatDecimal(employee.basicSalary, 0, 'COMMA', 0, 'POINT')}">75,000</span></td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Total Employees: <span th:text="${#lists.size(employees)}">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payroll History -->
+        <div class="row" th:if="${payrollRecords != null and !#lists.isEmpty(payrollRecords)}">
+            <div class="col">
+                <div class="card border">
+                    <div class="card-header bg-light">
+                        <h5>Payroll History</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Pay Period</th>
+                                        <th>Employee</th>
+                                        <th>Basic Salary</th>
+                                        <th>Allowances</th>
+                                        <th>Deductions</th>
+                                        <th>Net Salary</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="record : ${payrollRecords}">
+                                        <td th:text="${record.payPeriod}">Sep 2025</td>
+                                        <td th:text="${record.employeeCode}">EMP001</td>
+                                        <td>$<span th:text="${record.basicSalary}">75,000</span></td>
+                                        <td>$<span th:text="${record.allowances}">10,000</span></td>
+                                        <td>$<span th:text="${record.deductions}">5,000</span></td>
+                                        <td>$<span th:text="${record.netSalary}">80,000</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" th:if="${payrollRecords == null or #lists.isEmpty(payrollRecords)}">
+            <div class="col">
+                <div class="card border">
+                    <div class="card-header bg-light">
+                        <h5>Payroll History</h5>
+                    </div>
+                    <div class="card-body text-center text-muted py-4">
+                        <p>No payroll records found.</p>
+                        <p>Click "Generate Monthly Payroll" to create payroll records.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-5 border-top">
+        <div class="container">
+            <p>&copy; 2025 Employee Payroll System</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
