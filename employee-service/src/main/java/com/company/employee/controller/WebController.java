@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,7 @@ public class WebController {
 
     // Dashboard - Home page
     @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     public String dashboard(Model model) {
         List<Employee> employees = employeeService.getAllEmployees();
         model.addAttribute("employees", employees);
@@ -60,6 +62,7 @@ public class WebController {
 
     // Show all employees
     @GetMapping("/employees")
+    @PreAuthorize("hasRole('ADMIN')")
     public String showEmployees(Model model) {
         List<Employee> employees = employeeService.getAllEmployees();
         model.addAttribute("employees", employees);
@@ -109,11 +112,13 @@ public class WebController {
         List<Employee> employees = employeeService.getEmployeesByDepartment(department);
         model.addAttribute("employees", employees);
         model.addAttribute("department", department);
-        return "employees_by_department";
+        model.addAttribute("filterTitle", department + " Department Employees");
+        return "employees";
     }
 
     // Show payroll page
     @GetMapping("/payroll")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR')")
     public String showPayroll(Model model) {
         List<Employee> employees = employeeService.getAllEmployees();
         model.addAttribute("employees", employees);
@@ -170,6 +175,50 @@ public class WebController {
             }
 
             return "employee_details";
+        }
+        return "redirect:/employees";
+    }
+
+    // Generate payroll for an employee
+    @GetMapping("/employees/{id}/generate-payroll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String generatePayroll(@PathVariable Long id) {
+        Optional<Employee> employeeOpt = employeeService.getEmployeeById(id);
+        if (employeeOpt.isPresent()) {
+            Employee employee = employeeOpt.get();
+
+            try {
+                // Create salary object with current month
+                String salaryData = String.format(
+                        "{\"employeeId\":%d,\"employeeCode\":\"%s\",\"basicSalary\":%.2f,\"payPeriod\":\"%s\",\"status\":\"PENDING\"}",
+                        employee.getId(),
+                        employee.getEmployeeCode(),
+                        employee.getBasicSalary(),
+                        java.time.LocalDate.now().toString()
+                );
+
+                System.out.println("Generating payroll for: " + employee.getFirstName() + " " + employee.getLastName());
+                System.out.println("Payroll data: " + salaryData);
+
+                // Call payroll service to generate salary
+                HttpHeaders headers = new HttpHeaders();
+                headers.setBasicAuth("hr", "hr123");
+                headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+                HttpEntity<String> entity = new HttpEntity<>(salaryData, headers);
+
+                restTemplate.exchange(
+                        payrollServiceUrl + "/api/payroll",
+                        HttpMethod.POST,
+                        entity,
+                        String.class
+                );
+
+                System.out.println("Payroll generated successfully!");
+
+            } catch (Exception e) {
+                System.out.println("Error generating payroll: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
         return "redirect:/employees";
     }

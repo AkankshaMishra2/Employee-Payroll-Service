@@ -1,9 +1,10 @@
 package com.company.payroll.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class EmployeeDTO {
-
+public class Employee {
+    private Long id;
     private String employeeCode;
     private String firstName;
     private String lastName;
@@ -12,6 +13,19 @@ public class EmployeeDTO {
     private String position;
     private LocalDate joinDate;
     private Double basicSalary;
+    private LocalDateTime createdAt;
+
+    // Default constructor
+    public Employee() {}
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEmployeeCode() {
         return employeeCode;
@@ -77,5 +91,11 @@ public class EmployeeDTO {
         this.basicSalary = basicSalary;
     }
 
-    // Getters and setters (generate using your IDE)
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

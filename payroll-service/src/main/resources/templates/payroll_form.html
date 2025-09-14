@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit ? 'Edit Payroll' : 'Add New Payroll'}">Add New Payroll</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/images/image.png" height="45">
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1 th:text="${isEdit ? 'Edit Payroll Record' : 'Add New Payroll Record'}">Add New Payroll Record</h1>
+                <p>Create or modify payroll information</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-2"><a href="/payrolls" class="btn btn-light w-100 shadow-sm" style="transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#e9ecef'" onmouseout="this.style.backgroundColor=''">View All Payrolls</a></div>
+                            <div class="col-md-4 mb-2"><a href="/" class="btn btn-light w-100 shadow-sm" style="transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#e9ecef'" onmouseout="this.style.backgroundColor=''">Back to Home</a></div>
+                            <div class="col-md-4 mb-2"><a href="http://localhost:8081" class="btn btn-light w-100 shadow-sm" style="transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#e9ecef'" onmouseout="this.style.backgroundColor=''">Employee Service</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payroll Form -->
+        <div class="row mb-2" >
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 th:text="${isEdit ? 'Edit Payroll Information' : 'Payroll Information'}">Payroll Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/payrolls/save}" th:object="${salary}" method="post" >
+                            <input type="hidden" th:field="*{id}" th:if="${isEdit}">
+                            <input type="hidden" th:field="*{createdAt}" th:if="${isEdit}">
+                            
+                            <div class="mb-3">
+                                <label for="employeeId" class="form-label">Employee ID</label>
+                                <input type="number" class="form-control" th:field="*{employeeId}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="employeeCode" class="form-label">Employee Code</label>
+                                <input type="text" class="form-control" th:field="*{employeeCode}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="basicSalary" class="form-label">Basic Salary</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{basicSalary}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="allowances" class="form-label">Allowances</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{allowances}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deductions" class="form-label">Deductions</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{deductions}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="payPeriod" class="form-label">Pay Period</label>
+                                <input type="date" class="form-control" th:field="*{payPeriod}">
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex gap-2"></div>
+                                    <a href="/payrolls" class="btn btn-light">Cancel</a>
+                                    <button type="submit" class="btn btn-dark" th:text="${isEdit ? 'Update Payroll' : 'Save Payroll'}">Save Payroll</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- <footer class="bg-light text-center py-3" style="position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center;">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Employee Payroll System</p>
+        </div>
+    </footer> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

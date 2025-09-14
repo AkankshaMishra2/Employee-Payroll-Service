@@ -24,8 +24,8 @@
         <!-- Page Header -->
         <div class="row mb-4">
             <div class="col">
-                <h1>Employees</h1>
-                <p>Manage your organization's workforce</p>
+                <h1 th:text="${filterTitle != null ? filterTitle : 'Employees'}">Employees</h1>
+                <p th:text="${department != null ? 'Showing employees from ' + department + ' department' : 'Manage your organization workforce'}">Manage your organization's workforce</p>
             </div>
             <div class="col-auto">
                 <a th:href="@{/employees/new}" class="btn btn-light border">Add New Employee</a>
@@ -78,8 +78,13 @@
                                 <td>$<span th:text="${#numbers.formatDecimal(employee.basicSalary, 0, 'COMMA', 0, 'POINT')}">75,000</span></td>
                                 <td style="white-space: nowrap;">
                                     <a th:href="@{/employees/{id}/details(id=${employee.id})}" class="btn btn-sm btn-light border me-1" style="font-size: 0.8rem;">View</a>
+
                                     <a th:href="@{/employees/edit/{id}(id=${employee.id})}" class="btn btn-sm btn-light border me-1" style="font-size: 0.8rem;">Edit</a>
-                                    <a th:href="@{/employees/delete/{id}(id=${employee.id})}" class="btn btn-sm btn-light border" style="font-size: 0.8rem;"
+
+                                    <a th:href="@{/employees/{id}/generate-payroll(id=${employee.id})}" class="btn btn-sm btn-success border me-1" style="font-size: 0.8rem;" 
+                                       onclick="return confirm('Generate payroll for this employee?')">Pay</a>
+                                    
+                                    <a th:href="@{/employees/delete/{id}(id=${employee.id})}" class="btn btn-sm btn-danger border" style="font-size: 0.8rem;"
                                     onclick="return confirm('Are you sure you want to delete this employee?')">Delete</a>
                                 </td>
 

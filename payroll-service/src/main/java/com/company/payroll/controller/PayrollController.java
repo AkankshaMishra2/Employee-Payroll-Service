@@ -1,14 +1,24 @@
 package com.company.payroll.controller;
 
-import com.company.payroll.entity.Salary;
-import com.company.payroll.service.PayrollService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.company.payroll.entity.Salary;
+import com.company.payroll.service.PayrollService;
 
 @RestController
 @RequestMapping("/api/payroll")
+@PreAuthorize("hasRole('HR')") // Only HR can access all payroll operations
 public class PayrollController {
 
     @Autowired
@@ -20,6 +30,7 @@ public class PayrollController {
         Salary saved = payrollService.generatePayroll(salary);
         return ResponseEntity.ok(saved);
     }
+
     // Get all payroll records
     @GetMapping
     public ResponseEntity<List<Salary>> getAllPayrolls() {
@@ -40,6 +51,7 @@ public class PayrollController {
         List<Salary> salaries = payrollService.getPayrollByEmployeeIdJdbc(employeeId);
         return ResponseEntity.ok(salaries);
     }
+
     // Delete all salary records for an employee by employeeCode (for cascade delete)
     @DeleteMapping("/salaries/by-employee/{employeeCode}")
     public ResponseEntity<String> deleteSalariesByEmployeeCode(@PathVariable String employeeCode) {
