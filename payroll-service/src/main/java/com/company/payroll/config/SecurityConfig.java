@@ -42,12 +42,19 @@ public class SecurityConfig {
                 .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID", "remember-me")
                 .permitAll()
                 )
+                .rememberMe(remember -> remember
+                .key("payroll-service-remember-me-key")
+                .tokenValiditySeconds(2 * 60 * 60) // Remember for 2 hours
+                .userDetailsService(userDetailsService())
+                )
                 .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Always create sessions for web interface
-                .maximumSessions(5) // Allow up to 5 concurrent sessions per user
-                .maxSessionsPreventsLogin(false) // Don't prevent new logins
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .maximumSessions(10) // Increased concurrent sessions
+                .maxSessionsPreventsLogin(false)
                 );
         return http.build();
     }
