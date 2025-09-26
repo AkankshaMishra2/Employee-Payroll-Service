@@ -61,7 +61,7 @@ public class PayrollWebController {
                 .filter(s -> s.getId().equals(id))
                 .findFirst()
                 .orElse(null);
-        
+
         if (salary != null) {
             model.addAttribute("salary", salary);
             model.addAttribute("isEdit", true);
@@ -84,11 +84,11 @@ public class PayrollWebController {
             salary.setPayPeriod(LocalDate.now());
         }
         // Calculate net salary
-        double net = (salary.getBasicSalary() != null ? salary.getBasicSalary() : 0.0) +
-                    (salary.getAllowances() != null ? salary.getAllowances() : 0.0) -
-                    (salary.getDeductions() != null ? salary.getDeductions() : 0.0);
+        double net = (salary.getBasicSalary() != null ? salary.getBasicSalary() : 0.0)
+                + (salary.getAllowances() != null ? salary.getAllowances() : 0.0)
+                - (salary.getDeductions() != null ? salary.getDeductions() : 0.0);
         salary.setNetSalary(net);
-        
+
         payrollService.generatePayroll(salary);
         return "redirect:/payrolls";
     }
