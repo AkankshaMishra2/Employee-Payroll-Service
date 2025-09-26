@@ -1,4 +1,4 @@
-/* Employee Service unified modern styles using provided professional palette */
+/* Payroll Service unified modern styles using provided professional palette */
 
 :root {
     /* Palette from attachment */
@@ -188,13 +188,12 @@ footer {
 
 /* Add coral accent to first stat card */
 .dashboard-stat-card:first-child h4 {
-    color: var(--accent);
+    color: var(--brand-900);
 }
 
 /* Quick actions card styling */
 .quick-actions-card {
     border: 1px solid rgba(15,52,96,0.1) !important;
-    /* transition: all 0.2s ease; */
 }
 
 /* Add coral border on hover only */
