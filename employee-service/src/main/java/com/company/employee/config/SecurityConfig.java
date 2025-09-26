@@ -45,7 +45,6 @@ public class SecurityConfig {
     }
 
     // UserDetailsService is provided by CustomUserDetailsService component
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

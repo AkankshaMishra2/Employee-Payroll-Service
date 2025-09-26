@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +20,7 @@ public class PayrollWebController {
     @Autowired
     private PayrollService payrollService;
 
-    // Login page
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
     @GetMapping("/")
-    @PreAuthorize("hasRole('HR')")
     public String payrollServiceHome(Model model) {
         try {
             long totalRecords = payrollService.getAllPayrolls().size();
@@ -47,7 +39,6 @@ public class PayrollWebController {
 
     // Show all payroll records
     @GetMapping("/payrolls")
-    @PreAuthorize("hasRole('HR')")
     public String showPayrolls(Model model) {
         List<Salary> payrolls = payrollService.getAllPayrolls();
         model.addAttribute("payrolls", payrolls);
@@ -70,13 +61,20 @@ public class PayrollWebController {
                 .filter(s -> s.getId().equals(id))
                 .findFirst()
                 .orElse(null);
-
+        
         if (salary != null) {
             model.addAttribute("salary", salary);
             model.addAttribute("isEdit", true);
             return "payroll_form";
         }
         return "redirect:/payrolls";
+    }
+
+    // Release all pending payrolls (web action)
+    @GetMapping("/payrolls/release-all")
+    public String releaseAllPayrolls() {
+        int processed = payrollService.processBulkPayments();
+        return "redirect:/payrolls?released=" + processed;
     }
 
     // Save payroll (create or update)
@@ -86,11 +84,11 @@ public class PayrollWebController {
             salary.setPayPeriod(LocalDate.now());
         }
         // Calculate net salary
-        double net = (salary.getBasicSalary() != null ? salary.getBasicSalary() : 0.0)
-                + (salary.getAllowances() != null ? salary.getAllowances() : 0.0)
-                - (salary.getDeductions() != null ? salary.getDeductions() : 0.0);
+        double net = (salary.getBasicSalary() != null ? salary.getBasicSalary() : 0.0) +
+                    (salary.getAllowances() != null ? salary.getAllowances() : 0.0) -
+                    (salary.getDeductions() != null ? salary.getDeductions() : 0.0);
         salary.setNetSalary(net);
-
+        
         payrollService.generatePayroll(salary);
         return "redirect:/payrolls";
     }
@@ -100,6 +98,13 @@ public class PayrollWebController {
     public String deletePayroll(@PathVariable String employeeCode) {
         payrollService.deleteSalariesByEmployeeCode(employeeCode);
         return "redirect:/payrolls";
+    }
+
+    // Release/pay a single payroll record (web action)
+    @GetMapping("/payrolls/pay/{id}")
+    public String payPayroll(@PathVariable Long id) {
+        boolean updated = payrollService.markPayrollPaid(id);
+        return "redirect:/payrolls?released=" + (updated ? 1 : 0);
     }
 
     // Show payrolls by employee
@@ -112,25 +117,9 @@ public class PayrollWebController {
         return "payrolls";
     }
 
-    // Process payment for a payroll record
-    @GetMapping("/payrolls/process-payment/{id}")
-    @PreAuthorize("hasRole('HR')")
-    public String processPayment(@PathVariable Long id) {
-        try {
-            List<Salary> payrolls = payrollService.getAllPayrolls();
-            Salary salary = payrolls.stream()
-                    .filter(s -> s.getId().equals(id))
-                    .findFirst()
-                    .orElse(null);
-
-            if (salary != null && "PENDING".equals(salary.getStatus())) {
-                // Update status to PAID
-                salary.setStatus("PAID");
-                payrollService.generatePayroll(salary); // This will update the existing record
-            }
-        } catch (Exception e) {
-            System.out.println("Error processing payment: " + e.getMessage());
-        }
-        return "redirect:/payrolls";
+    // Serve custom login page
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 }

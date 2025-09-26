@@ -1,11 +1,12 @@
 package com.company.employee.config;
 
-import com.company.employee.entity.User;
-import com.company.employee.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import com.company.employee.entity.User;
+import com.company.employee.repository.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {

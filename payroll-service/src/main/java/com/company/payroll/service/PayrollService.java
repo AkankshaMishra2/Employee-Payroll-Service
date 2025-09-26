@@ -72,4 +72,40 @@ public class PayrollService {
     public void deleteSalariesByEmployeeCode(String employeeCode) {
         salaryRepository.deleteByEmployeeCode(employeeCode);
     }
+
+    // Process bulk payments for all pending payrolls
+    @Transactional
+    public int processBulkPayments() {
+        List<Salary> allPayrolls = salaryRepository.findAllByOrderByCreatedAtDesc();
+        int processedCount = 0;
+
+        System.out.println("Total payroll records found: " + allPayrolls.size());
+
+        for (Salary salary : allPayrolls) {
+            System.out.println("Payroll ID: " + salary.getId() + ", Status: " + salary.getStatus() + ", Employee: " + salary.getEmployeeCode());
+            if ("PENDING".equals(salary.getStatus())) {
+                salary.setStatus("PAID");
+                salaryRepository.save(salary);
+                processedCount++;
+                System.out.println("Processed payroll ID: " + salary.getId());
+            }
+        }
+
+        System.out.println("Total processed: " + processedCount);
+        return processedCount;
+    }
+
+    @Transactional
+    public boolean markPayrollPaid(Long id) {
+        java.util.Optional<Salary> opt = salaryRepository.findById(id);
+        if (opt.isPresent()) {
+            Salary salary = opt.get();
+            if (!"PAID".equalsIgnoreCase(salary.getStatus())) {
+                salary.setStatus("PAID");
+                salaryRepository.save(salary);
+                return true;
+            }
+        }
+        return false;
+    }
 }
