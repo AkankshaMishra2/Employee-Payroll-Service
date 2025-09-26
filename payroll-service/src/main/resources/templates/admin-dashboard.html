@@ -42,18 +42,18 @@
 
         <!-- Statistics Cards -->
         <div class="row mb-5">
-            <div class="col-md-3 mb-3">
+            <!-- <div class="col-md-3 mb-3">
                 <div class="card dashboard-stat-card">
                     <div class="card-body">
                         <h4>Active</h4>
                         <p>Scheduler Status</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-3 mb-3">
                 <div class="card dashboard-stat-card">
                     <div class="card-body">
-                        <h4>1st of month</h4>
+                        <h4>1st of each month</h4>
                         <p>Next Run</p>
                     </div>
                 </div>
@@ -71,17 +71,19 @@
                     <div class="card-body">
                         <h4 th:text="${currentMonthPayrolls != null ? currentMonthPayrolls.size() : 0}">0</h4>
                         <p>Current Month Records</p>
+                        <small class="text-muted">September 2025</small>
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card dashboard-stat-card">
                     <div class="card-body">
-                        <h4 th:text="${processedCount != null ? processedCount : 0}">0</h4>
-                        <p>Processed Last Month</p>
+                        <h4 th:text="${allPayrolls != null ? allPayrolls.size() : 0}">0</h4>
+                        <p>Total Records</p>
+                        <small class="text-muted">All time</small>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
 
         <!-- Quick Actions -->
@@ -149,8 +151,18 @@
         <div class="row mb-4">
             <div class="col">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>Recent Payroll Records</h5>
+                        <div class="btn-group" role="group">
+                            <a href="/admin/export-pdf/bulk" class="btn btn-success btn-sm" title="Export All Records from Database">
+                                <i class="fas fa-file-pdf me-1"></i>Export All Records
+                                <br><small>(<span th:text="${allPayrolls != null ? allPayrolls.size() : 0}">0</span> total)</small>
+                            </a>
+                            <a href="/admin/export-pdf/current-month" class="btn btn-info btn-sm" title="Export September 2025 Records Only">
+                                <i class="fas fa-calendar-alt me-1"></i>Current Month
+                                <br><small>(<span th:text="${currentMonthPayrolls != null ? currentMonthPayrolls.size() : 0}">0</span> records)</small>
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div th:if="${currentMonthPayrolls != null && !currentMonthPayrolls.empty}">
@@ -177,16 +189,26 @@
                                                   th:text="${salary.status}">PROCESSED</span>
                                         </td>
                                         <td style="white-space: nowrap;">
-                                            <a th:href="@{/admin/payroll-details/{id}(id=${salary.id})}" class="btn btn-sm btn-outline-primary me-1">View</a>
+                                            <a th:href="@{/admin/payroll-details/{id}(id=${salary.id})}" class="btn btn-sm btn-outline-primary me-1" title="View Details">View</a>
+                                            <a th:href="@{/admin/export-pdf/payslip/{id}(id=${salary.id})}" class="btn btn-sm btn-outline-success me-1" title="Download Payslip PDF">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
                                             <button class="btn btn-sm btn-outline-danger" 
-                                                    th:onclick="'deletePayroll(' + ${salary.id} + ')'">Delete</button>
+                                                    th:onclick="'deletePayroll(' + ${salary.id} + ')'" title="Delete Record">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div th:if="${currentMonthPayrolls == null || currentMonthPayrolls.empty}" class="text-center">
-                            <p>No payroll records found for current month</p>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>No payroll records found for <strong>September 2025</strong>.
+                                <br><small class="text-muted">
+                                    💡 Tip: Use "Export All Records" button above to download all existing payroll data from the database.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>

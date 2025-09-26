@@ -4,17 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Details</title>
-        <link href="/css/style.css?v=8" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/style.css?v=12" rel="stylesheet">
+    
+    <!-- Additional inline styles to ensure layout works -->
+    <style>
+        .info-group {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .info-group:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f3460;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .info-value {
+            font-size: 1rem;
+            color: #1a1a2f;
+            line-height: 1.4;
+        }
+        .monthly-equivalent {
+            padding: 1rem;
+            background: rgba(15, 52, 96, 0.05);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(15, 52, 96, 0.1);
+        }
+        .empty-state i {
+            font-size: 3rem !important;
+        }
+        
+        /* Match other pages styling */
+        body {
+            background-color: #f1fafb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: rgba(11,18,32,0.92);
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, #0b1220, #0f3460) !important;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15,52,96,0.08);
+            box-shadow: 0 10px 30px rgba(11,18,32,0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(11,18,32,0.12);
+        }
+        
+        .card-header {
+            background: rgba(15,52,96,0.02) !important;
+            border-bottom: 1px solid rgba(15,52,96,0.08) !important;
+        }
+        
+        .btn-primary {
+            background-color: #0f3460;
+            border-color: #0f3460;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a1a2f;
+            border-color: #1a1a2f;
+        }
+        
+        .btn-outline-secondary {
+            color: #0f3460;
+            border-color: #0f3460;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #0f3460;
+            border-color: #0f3460;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">Employee Payroll System</a>
+            <a class="navbar-brand fw-bold text-white" href="/">Employee Payroll System</a>
             <div class="navbar-nav ms-auto d-flex flex-row gap-3">
-                <a class="nav-link text-black" th:href="@{/}">Dashboard</a>
-                <a class="nav-link text-black fw-bold" th:href="@{/employees}">Employees</a>
-                <a class="nav-link text-black" th:href="@{/payroll}">Payroll</a>
+                <a class="nav-link text-white" th:href="@{/}">Dashboard</a>
+                <a class="nav-link text-white fw-bold active" th:href="@{/employees}">Employees</a>
+                <a class="nav-link text-white" th:href="@{/payroll}">Payroll</a>
             </div>
         </div>
     </nav>
@@ -27,47 +115,60 @@
                 <h1>Employee Details</h1>
             </div>
             <div class="col-auto">
-                <a th:href="@{/employees/edit/{id}(id=${employee.id})}" class="btn btn-light border">Edit Employee</a>
-                <a th:href="@{/employees}" class="btn btn-light border">Back to List</a>
+                <a th:href="@{/employees/edit/{id}(id=${employee.id})}" class="btn btn-primary me-2">
+                    <i class="fas fa-edit me-1"></i>Edit Employee
+                </a>
+                <a th:href="@{/employees}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to List
+                </a>
             </div>
         </div>
 
-        <!-- Employee Information Card -->
+        <!-- Employee Information Cards -->
         <div class="row mb-4">
             <div class="col-md-8">
-                <div class="card border">
-                    <div class="card-header bg-transparent">
-                        <h5>Personal Information</h5>
+                <div class="card h-100">
+                    <div class="card-header bg-transparent border-bottom">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2 text-primary"></i>Personal Information
+                        </h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="card-body p-4">
+                        <div class="row g-4">
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label muted-small">Employee Code</label>
-                                    <div th:text="${employee.employeeCode}">EMP001</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Employee Code</label>
+                                    <div class="info-value fw-bold text-primary" th:text="${employee.employeeCode}">EMP001</div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Full Name</label>
-                                    <div th:text="${employee.firstName + ' ' + employee.lastName}">John Doe</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Full Name</label>
+                                    <div class="info-value h5 mb-1" th:text="${employee.firstName + ' ' + employee.lastName}">John Doe</div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Email Address</label>
-                                    <div th:text="${employee.email}">john.doe@company.com</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Email Address</label>
+                                    <div class="info-value">
+                                        <a th:href="'mailto:' + ${employee.email}" th:text="${employee.email}" class="text-decoration-none">john.doe@company.com</a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Department</label>
-                                    <div th:text="${employee.department}">IT</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Department</label>
+                                    <div class="info-value">
+                                        <span class="badge bg-info fs-6 px-3 py-2" th:text="${employee.department}">IT</span>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Position</label>
-                                    <div th:text="${employee.position}">Software Engineer</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Position</label>
+                                    <div class="info-value fw-semibold" th:text="${employee.position}">Software Engineer</div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted">Join Date</label>
-                                    <div th:if="${employee.joinDate != null}" th:text="${#temporals.format(employee.joinDate, 'MMMM dd, yyyy')}">January 15, 2023</div>
-                                    <div th:if="${employee.joinDate == null}">N/A</div>
+                                <div class="info-group mb-4">
+                                    <label class="info-label">Join Date</label>
+                                    <div class="info-value">
+                                        <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                        <span th:if="${employee.joinDate != null}" th:text="${#temporals.format(employee.joinDate, 'MMMM dd, yyyy')}">January 15, 2023</span>
+                                        <span th:if="${employee.joinDate == null}" class="text-muted">N/A</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,15 +176,25 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border">
-                    <div class="card-header bg-light">
-                        <h5>Salary Information</h5>
+                <div class="card h-100">
+                    <div class="card-header bg-transparent border-bottom">
+                        <h5 class="mb-0">
+                            Salary Information
+                        </h5>
                     </div>
-                    <div class="card-body text-center">
-                        <div class="h3">
-                            $<span th:text="${employee.basicSalary}">75,000</span>
+                    <div class="card-body text-center d-flex flex-column justify-content-center p-4">
+                        <div class="salary-display mb-3">
+                            <div class="display-4 fw-bold text-success mb-2">
+                                $<span th:text="${#numbers.formatDecimal(employee.basicSalary, 0, 'COMMA', 0, 'POINT')}">75,000</span>
+                            </div>
+                            <div class="text-muted mb-3">Basic Salary (Annual)</div>
+                            <div class="monthly-equivalent">
+                                <small class="text-muted">Monthly: </small>
+                                <span class="fw-semibold">
+                                    $<span th:text="${#numbers.formatDecimal(employee.basicSalary / 12, 0, 'COMMA', 2, 'POINT')}">6,250.00</span>
+                                </span>
+                            </div>
                         </div>
-                        <small class="text-muted">Basic Salary (Annual)</small>
                     </div>
                 </div>
             </div>
@@ -93,10 +204,23 @@
         <!-- Salary Records -->
         <div class="row">
             <div class="col">
-                <div class="card border">
-                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                        <h5>Salary History</h5>
-                        <span class="badge bg-secondary">From Payroll Service (Port 8082)</span>
+                <div class="card">
+                    <div class="card-header bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            Salary History
+                        </h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-dark me-2">
+                                From Payroll Service (Port 8082)
+                            </span>
+                            <a th:href="'http://localhost:8082/admin/export-pdf/bulk'" 
+                               class="btn btn-success btn-sm" 
+                               title="Export All Employee Payslips" 
+                               target="_blank"
+                               th:if="${salaryRecords != null and !#lists.isEmpty(salaryRecords)}">
+                                <i class="fas fa-file-pdf me-1"></i>Export All
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div th:if="${payrollError}" class="alert alert-light border" role="alert">
@@ -105,33 +229,72 @@
                         
                         <div th:if="${salaryRecords != null and !#lists.isEmpty(salaryRecords)}">
                             <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
+                                <table class="table table-striped table-borderless">
+                                    <thead class="table-dark">
                                         <tr>
-                                            <th>Pay Period</th>
-                                            <th>Basic Salary</th>
-                                            <th>Allowances</th>
-                                            <th>Deductions</th>
-                                            <th>Net Salary</th>
-                                            <th>Payment Date</th>
+                                            <th class="fw-semibold">
+                                                Pay Period
+                                            </th>
+                                            <th class="fw-semibold">
+                                                Basic Salary
+                                            </th>
+                                            <th class="fw-semibold text-success">
+                                                <i class="fas fa-plus me-1"></i>Allowances
+                                            </th>
+                                            <th class="fw-semibold text-danger">
+                                                <i class="fas fa-minus me-1"></i>Deductions
+                                            </th>
+                                            <th class="fw-semibold">
+                                                Net Salary
+                                            </th>
+                                            <th class="fw-semibold">
+                                                Payment Date
+                                            </th>
+                                            <th class="fw-semibold text-center">
+                                                Actions
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:each="record : ${salaryRecords}">
-                                            <td th:text="${record.payPeriod}">2024-01-31</td>
-                                            <td>$<span th:text="${record.basicSalary}">75,000.00</span></td>
-                                            <td>+$<span th:text="${record.allowances}">10,000.00</span></td>
-                                            <td>-$<span th:text="${record.deductions}">5,000.00</span></td>
-                                            <td>$<span th:text="${record.netSalary}">80,000.00</span></td>
-                                            <td th:text="${record.createdAt != null ? record.createdAt : 'N/A'}">Payment Date</td>
+                                            <td class="fw-medium" th:text="${record.payPeriod}">2024-01-31</td>
+                                            <td class="fw-semibold">
+                                                $<span th:text="${#numbers.formatDecimal(record.basicSalary, 0, 'COMMA', 2, 'POINT')}">75,000.00</span>
+                                            </td>
+                                            <td class="text-success fw-medium">
+                                                +$<span th:text="${#numbers.formatDecimal(record.allowances, 0, 'COMMA', 2, 'POINT')}">10,000.00</span>
+                                            </td>
+                                            <td class="text-danger fw-medium">
+                                                -$<span th:text="${#numbers.formatDecimal(record.deductions, 0, 'COMMA', 2, 'POINT')}">5,000.00</span>
+                                            </td>
+                                            <td class="fw-bold text-primary">
+                                                $<span th:text="${#numbers.formatDecimal(record.netSalary, 0, 'COMMA', 2, 'POINT')}">80,000.00</span>
+                                            </td>
+                                            <td class="text-muted" th:text="${record.createdAt != null ? record.createdAt : 'N/A'}">Payment Date</td>
+                                            <td class="text-center">
+                                                <a th:href="'http://localhost:8082/admin/export-pdf/payslip/' + ${record.id}" 
+                                                   class="btn btn-sm btn-success" 
+                                                   title="Download Payslip PDF" 
+                                                   target="_blank">
+                                                    <i class="fas fa-file-pdf me-1"></i>Payslip
+                                                </a>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         
-                        <div th:if="${salaryRecords == null or #lists.isEmpty(salaryRecords)}" class="text-center muted-small py-4">
-                            No salary records found for this employee.
+                        <div th:if="${salaryRecords == null or #lists.isEmpty(salaryRecords)}" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-receipt text-muted mb-3" style="font-size: 3rem;"></i>
+                                <h6 class="text-muted">No Salary Records Found</h6>
+                                <p class="text-muted mb-4">This employee doesn't have any processed payroll records yet.</p>
+                                <div class="alert alert-info d-inline-block">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Salary records will appear here after payroll processing.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +309,6 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
