@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .requestMatchers("/login").permitAll() // Allow access to login page
                 .requestMatchers("/api/payroll/**").hasRole("HR") // Only HR can access payroll APIs
                 .requestMatchers("/payrolls/**", "/").hasRole("HR") // Only HR can access payroll web pages
+                .requestMatchers("/admin/**").hasRole("HR") // Only HR can access admin/cron job features
+                .requestMatchers("/dashboard").hasRole("HR") // HR dashboard access
                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic Auth for API calls
@@ -43,7 +45,9 @@ public class SecurityConfig {
                 .permitAll()
                 )
                 .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Always create sessions for web interface
+                .maximumSessions(5) // Allow up to 5 concurrent sessions per user
+                .maxSessionsPreventsLogin(false) // Don't prevent new logins
                 );
         return http.build();
     }

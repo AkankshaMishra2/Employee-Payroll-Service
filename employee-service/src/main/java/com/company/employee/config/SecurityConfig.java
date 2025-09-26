@@ -39,7 +39,9 @@ public class SecurityConfig {
                 .permitAll()
                 )
                 .sessionManagement(management -> management
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)); // Allow sessions for web interface
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Always create sessions for web interface
+                .maximumSessions(5) // Allow up to 5 concurrent sessions per user
+                .maxSessionsPreventsLogin(false)); // Don't prevent new logins
 
         return http.build();
     }

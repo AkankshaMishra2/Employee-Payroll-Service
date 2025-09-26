@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,8 +15,13 @@
             <div class="collapse navbar-collapse justify-content-end">
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" th:href="@{/}">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/employees}" th:if="${false}">Employees</a></li>
                     <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/payrolls}">Payroll</a></li>
+                    <li class="nav-item" sec:authorize="hasRole('HR')">
+                        <a class="nav-link" th:href="@{/admin/dashboard}">
+                            <i class="fas fa-coins me-1"></i>Auto-Pay
+                        </a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost:8081">Employee Service</a></li>
                 </ul>
             </div>
         </div>

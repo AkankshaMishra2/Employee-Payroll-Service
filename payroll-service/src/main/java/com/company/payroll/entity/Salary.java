@@ -19,16 +19,38 @@ public class Salary {
     private Long id;
 
     private Long employeeId;
+    private String employeeName;
     private String employeeCode;
+
+    // Salary Components
     private Double basicSalary;
     private Double allowances;
-    private Double deductions;
+    private Double overtimePay = 0.0;
+    private Double grossSalary;
+
+    // Deductions
+    private Double deductions; // Total deductions (for backward compatibility)
+    private Double taxDeduction = 0.0;
+    private Double pfDeduction = 0.0;
+    private Double esiDeduction = 0.0;
+    private Double latePenalty = 0.0;
+    private Double totalDeductions = 0.0;
+
     private Double netSalary;
     private LocalDate payPeriod;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDate processedDate;
 
     @Column(nullable = false)
-    private String status = "PENDING"; // PENDING, PAID
+    private String status = "PENDING"; // PENDING, PROCESSED, PAID
+
+    // Attendance related fields for payroll tracking
+    private Integer year;
+    private Integer month;
+    private Integer workingDays;
+    private Double totalHours;
+    private Double overtimeHours = 0.0;
+    private Integer lateCount = 0;
 
     // Constructors
     public Salary() {
@@ -114,5 +136,124 @@ public class Salary {
         this.status = status;
     }
 
-    // Getters and setters (generate using your IDE)
+    // New getters and setters for enhanced payroll features
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public Double getOvertimePay() {
+        return overtimePay;
+    }
+
+    public void setOvertimePay(Double overtimePay) {
+        this.overtimePay = overtimePay;
+    }
+
+    public Double getGrossSalary() {
+        return grossSalary;
+    }
+
+    public void setGrossSalary(Double grossSalary) {
+        this.grossSalary = grossSalary;
+    }
+
+    public Double getTaxDeduction() {
+        return taxDeduction;
+    }
+
+    public void setTaxDeduction(Double taxDeduction) {
+        this.taxDeduction = taxDeduction;
+    }
+
+    public Double getPfDeduction() {
+        return pfDeduction;
+    }
+
+    public void setPfDeduction(Double pfDeduction) {
+        this.pfDeduction = pfDeduction;
+    }
+
+    public Double getEsiDeduction() {
+        return esiDeduction;
+    }
+
+    public void setEsiDeduction(Double esiDeduction) {
+        this.esiDeduction = esiDeduction;
+    }
+
+    public Double getLatePenalty() {
+        return latePenalty;
+    }
+
+    public void setLatePenalty(Double latePenalty) {
+        this.latePenalty = latePenalty;
+    }
+
+    public Double getTotalDeductions() {
+        return totalDeductions;
+    }
+
+    public void setTotalDeductions(Double totalDeductions) {
+        this.totalDeductions = totalDeductions;
+    }
+
+    public LocalDate getProcessedDate() {
+        return processedDate;
+    }
+
+    public void setProcessedDate(LocalDate processedDate) {
+        this.processedDate = processedDate;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
+    public Integer getWorkingDays() {
+        return workingDays;
+    }
+
+    public void setWorkingDays(Integer workingDays) {
+        this.workingDays = workingDays;
+    }
+
+    public Double getTotalHours() {
+        return totalHours;
+    }
+
+    public void setTotalHours(Double totalHours) {
+        this.totalHours = totalHours;
+    }
+
+    public Double getOvertimeHours() {
+        return overtimeHours;
+    }
+
+    public void setOvertimeHours(Double overtimeHours) {
+        this.overtimeHours = overtimeHours;
+    }
+
+    public Integer getLateCount() {
+        return lateCount;
+    }
+
+    public void setLateCount(Integer lateCount) {
+        this.lateCount = lateCount;
+    }
 }
