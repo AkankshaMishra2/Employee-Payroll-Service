@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PortalController {
 
-    @Value("${app.employee-service.url}")
+    @Value("${app.employee-service.url:http://localhost:8081}")
     private String employeeServiceUrl;
 
-    @Value("${app.payroll-service.url}")
+    @Value("${app.payroll-service.url:http://localhost:8082}")
     private String payrollServiceUrl;
 
     @GetMapping("/")
