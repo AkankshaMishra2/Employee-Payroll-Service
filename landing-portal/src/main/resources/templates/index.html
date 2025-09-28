@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCorp - Corporate Employee Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .portal-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            border: none;
+            overflow: hidden;
+        }
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        .department-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        .feature-list {
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+        .feature-list li {
+            margin-bottom: 0.8rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .portal-btn {
+            margin-top: auto;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #28a745;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="white" stop-opacity="0.1"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs><rect width="100" height="20" fill="url(%23a)"/></svg>');
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            margin: 3rem 0;
+        }
+        .stats-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 4rem 0;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-department {
+            border: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            background: white;
+        }
+        .card-department::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .why-choose-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+        .testimonial-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 4rem 0;
+        }
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        .illustration-float {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.1;
+            max-width: 300px;
+        }
+        .content-section {
+            padding: 4rem 0;
+        }
+        .team-illustration {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Hero Section with Banner -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center hero-content">
+                <div class="col-lg-7">
+                    <h1 class="display-3 fw-bold mb-4">
+                        Welcome to TechCorp
+                    </h1>
+                    <h2 class="h3 mb-4 opacity-90">
+                        Unified Employee Management System
+                    </h2>
+                    <p class="lead mb-4 opacity-85">
+                        Empowering organizations with seamless HR and Payroll management. 
+                        Access specialized department portals designed for efficiency and growth.
+                    </p>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-2 text-warning"></i>
+                            <span>Secure Access</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-2 text-warning"></i>
+                            <span>Real-time Data</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-2 text-warning"></i>
+                            <span>Mobile Friendly</span>
+                        </div>
+                    </div>
+                    <a href="#departments" class="btn btn-warning btn-lg px-4 py-3 rounded-pill">
+                        <i class="fas fa-arrow-down me-2"></i>Explore Departments
+                    </a>
+                </div>
+                <div class="col-lg-5">
+                    <div class="text-center">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfMV8xIiB4MT0iNDAiIHkxPSI2MCIgeDI9IjM2MCIgeTI9IjI0MCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNjY3RUVBIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NEJBMiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiByeD0iMjAiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl8xXzEpIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8Y2lyY2xlIGN4PSIyMDAiIGN5PSIxNDAiIHI9IjQwIiBmaWxsPSIjRkZGRkZGIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNMTgwIDEyMEgxNDBWMTYwSDE4MFYxMjBaIiBmaWxsPSIjNjY3RUVBIi8+CjxwYXRoIGQ9Ik0yNjAgMTIwSDIyMFYxNjBIMjYwVjEyMFoiIGZpbGw9IiM3NjRCQTIiLz4KPGNpcmNsZSBjeD0iMTIwIiBjeT0iODAiIHI9IjE1IiBmaWxsPSIjRkZGRkZGIiBmaWxsLW9wYWNpdHk9IjAuNyIvPgo8Y2lyY2xlIGN4PSIyODAiIGN5PSIyMDAiIHI9IjEyIiBmaWxsPSIjRkZGRkZGIiBmaWxsLW9wYWNpdHk9IjAuNiIvPgo8L3N2Zz4K" 
+                             alt="Corporate Team Meeting" 
+                             class="team-illustration">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="fw-bold mb-3">Trusted by Organizations</h2>
+                    <p class="text-muted">Powering employee management across the enterprise</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <h5 class="text-muted mb-0">Employees</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">15</div>
+                        <h5 class="text-muted mb-0">Departments</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">99.9%</div>
+                        <h5 class="text-muted mb-0">Uptime</h5>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <h5 class="text-muted mb-0">Support</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Department Portals Section -->
+    <section id="departments" class="content-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">Department Portals</h2>
+                    <p class="text-muted lead">Choose your department to access specialized tools and services</p>
+                </div>
+            </div>
+
+            <!-- Department Cards -->
+            <div class="row g-5 mb-5">
+                <!-- HR Department Card -->
+                <div class="col-lg-6">
+                    <div class="card portal-card card-department h-100 position-relative">
+                        <div class="card-body d-flex flex-column text-center p-5">
+                            <div class="department-icon text-primary">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="card-title text-primary mb-3 fw-bold">Human Resources Portal</h3>
+                            <p class="card-text text-muted mb-4 lead">
+                                Complete HR management solution for employee lifecycle, recruitment, and organizational development
+                            </p>
+                            
+                            <ul class="list-unstyled feature-list mb-4">
+                                <li><i class="fas fa-user-plus text-primary me-3"></i>Employee Registration & Onboarding</li>
+                                <li><i class="fas fa-sitemap text-primary me-3"></i>Department & Team Management</li>
+                                <li><i class="fas fa-address-book text-primary me-3"></i>Staff Directory & Reporting</li>
+                                <li><i class="fas fa-chart-line text-primary me-3"></i>Performance & Analytics</li>
+                                <li><i class="fas fa-calendar-alt text-primary me-3"></i>Leave & Attendance Tracking</li>
+                                <li><i class="fas fa-graduation-cap text-primary me-3"></i>Training & Development</li>
+                            </ul>
+
+                            <div class="portal-btn mt-auto">
+                                <a th:href="${employeeServiceUrl}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill" target="_blank">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Access HR Portal
+                                </a>
+                                <p class="small text-muted mt-2 mb-0">Port 8081 | Secure Access</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payroll Department Card -->
+                <div class="col-lg-6">
+                    <div class="card portal-card card-department h-100 position-relative">
+                        <div class="card-body d-flex flex-column text-center p-5">
+                            <div class="department-icon text-success">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <h3 class="card-title text-success mb-3 fw-bold">Payroll Management Portal</h3>
+                            <p class="card-text text-muted mb-4 lead">
+                                Advanced payroll processing system with comprehensive financial reporting and compliance management
+                            </p>
+                            
+                            <ul class="list-unstyled feature-list mb-4">
+                                <li><i class="fas fa-money-check-alt text-success me-3"></i>Automated Salary Processing</li>
+                                <li><i class="fas fa-chart-pie text-success me-3"></i>Payroll Analytics & Insights</li>
+                                <li><i class="fas fa-coins text-success me-3"></i>Compensation Management</li>
+                                <li><i class="fas fa-file-invoice text-success me-3"></i>Tax & Compliance Reporting</li>
+                                <li><i class="fas fa-bank text-success me-3"></i>Banking & Payment Integration</li>
+                                <li><i class="fas fa-shield-alt text-success me-3"></i>Financial Security & Auditing</li>
+                            </ul>
+
+                            <div class="portal-btn mt-auto">
+                                <a th:href="${payrollServiceUrl}" class="btn btn-success btn-lg px-5 py-3 rounded-pill" target="_blank">
+                                    <i class="fas fa-calculator me-2"></i>Access Payroll Portal
+                                </a>
+                                <p class="small text-muted mt-2 mb-0">Port 8082 | Encrypted Connection</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4">Why Choose TechCorp EMS?</h2>
+                    <p class="lead text-muted mb-4">
+                        Our Employee Management System combines cutting-edge technology with 
+                        user-friendly design to deliver unparalleled efficiency and security.
+                    </p>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h5 class="fw-bold">Enterprise Security</h5>
+                                <p class="text-muted small">JWT-based authentication with role-based access control</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h5 class="fw-bold">Mobile Ready</h5>
+                                <p class="text-muted small">Responsive design works seamlessly on all devices</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <h5 class="fw-bold">Analytics Driven</h5>
+                                <p class="text-muted small">Real-time insights and comprehensive reporting</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-cloud"></i>
+                                </div>
+                                <h5 class="fw-bold">Cloud Native</h5>
+                                <p class="text-muted small">Scalable microservices architecture</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center position-relative h-100">
+                        <!-- Professional Team Meeting Illustration -->
+                        <div class="bg-light rounded-3 p-4 shadow-sm">
+                            <svg width="100%" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- SVG content remains the same -->
+                                <rect width="600" height="400" rx="20" fill="#F8F9FA"/>
+                                <ellipse cx="300" cy="280" rx="180" ry="60" fill="#E9ECEF"/>
+                                <rect x="120" y="220" width="360" height="40" rx="20" fill="#DEE2E6"/>
+                                <circle cx="180" cy="160" r="25" fill="#FFE4B5"/>
+                                <path d="M155 185h50c8 0 15 7 15 15v20h-80v-20c0-8 7-15 15-15z" fill="#667EEA"/>
+                                <circle cx="300" cy="140" r="30" fill="#F4C2A1"/>
+                                <path d="M270 175h60c10 0 18 8 18 18v25h-96v-25c0-10 8-18 18-18z" fill="#764BA2"/>
+                                <circle cx="420" cy="160" r="25" fill="#D4B5A0"/>
+                                <path d="M395 185h50c8 0 15 7 15 15v20h-80v-20c0-8 7-15 15-15z" fill="#28A745"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- Floating elements -->
+                        <div class="position-absolute top-0 end-0 translate-middle">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-lightbulb text-white"></i>
+                            </div>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 translate-middle">
+                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                <i class="fas fa-check text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonial-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">What Our Team Says</h2>
+                    <p class="text-muted lead">Real feedback from TechCorp employees</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">Sarah Chen</h6>
+                                    <small class="text-muted">HR Manager</small>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-muted">"The HR portal has streamlined our entire employee management process. What used to take hours now takes minutes!"</p>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">Michael Rodriguez</h6>
+                                    <small class="text-muted">Payroll Specialist</small>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-muted">"Payroll processing is now completely automated. The analytics help us make better financial decisions."</p>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">Emma Thompson</h6>
+                                    <small class="text-muted">IT Administrator</small>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-muted">"The security features and JWT authentication give us peace of mind. Setup was incredibly straightforward."</p>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Information & Quick Access -->
+    <section class="content-section bg-white">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="fw-bold mb-3">System Information</h2>
+                    <p class="text-muted">Real-time system status and access information</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- System Status -->
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-success mb-3">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Live System Status</h5>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Corporate Portal:</span>
+                                    <div>
+                                        <!-- <span class="status-indicator"></span> -->
+                                        <span class="badge bg-success">Online</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Employee System:</span>
+                                    <div>
+                                        <!-- <span class="status-indicator"></span> -->
+                                        <span class="badge bg-success">Port 8081</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Payroll System:</span>
+                                    <div>
+                                        <!-- <span class="status-indicator"></span> -->
+                                        <span class="badge bg-success">Port 8082</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Last updated: <span id="lastUpdated">Just now</span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Credentials -->
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-primary mb-3">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Demo Access Credentials</h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <div class="mb-3">
+                                    <h6 class="text-primary mb-2">HR Portal Access</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">Username:</small>
+                                        <code class="bg-white px-2 py-1 rounded">admin</code>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">Password:</small>
+                                        <code class="bg-white px-2 py-1 rounded">admin123</code>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="text-success mb-2">Payroll Portal Access</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">Username:</small>
+                                        <code class="bg-white px-2 py-1 rounded">hr</code>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">Password:</small>
+                                        <code class="bg-white px-2 py-1 rounded">hr123</code>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Remember Me option available for extended sessions
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IT Support -->
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon bg-info mb-3">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">IT Support & Help</h5>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone me-3 text-info"></i>
+                                    <div class="text-start">
+                                        <div class="fw-bold">24/7 Help Desk</div>
+                                        <small class="text-muted">+1-800-TECH-CORP</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-envelope me-3 text-info"></i>
+                                    <div class="text-start">
+                                        <div class="fw-bold">Email Support</div>
+                                        <small class="text-muted">support@techcorp.com</small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-comments me-3 text-info"></i>
+                                    <div class="text-start">
+                                        <div class="fw-bold">Live Chat</div>
+                                        <small class="text-muted">Available 9AM - 6PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <a href="#" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-question-circle me-1"></i>View Documentation
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-building me-2 text-primary"></i>TechCorp EMS
+                    </h5>
+                    <p class="text-light mb-3">
+                        Leading the future of employee management with innovative solutions 
+                        that empower organizations and their workforce.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-github"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#departments" class="text-light text-decoration-none">Departments</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Documentation</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">API Docs</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Services</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a th:href="${employeeServiceUrl}" class="text-light text-decoration-none" target="_blank">HR Portal</a></li>
+                        <li class="mb-2"><a th:href="${payrollServiceUrl}" class="text-light text-decoration-none" target="_blank">Payroll Portal</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">System Health</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">User Guides</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Training</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Security</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Contact</h6>
+                    <ul class="list-unstyled text-light">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Silicon Valley, CA</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>+1-800-TECH-CORP</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@techcorp.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 border-light">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-light">&copy; 2025 TechCorp Employee Management System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="badge bg-primary me-2">Corporate Portal v1.0</span>
+                    <span class="badge bg-success me-2">JWT Secured</span>
+                    <span class="badge bg-info">Spring Boot 3.5.5</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    
+    <script>
+        // Update last updated time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const element = document.getElementById('lastUpdated');
+            if (element) {
+                element.textContent = timeString;
+            }
+        }
+        
+        // Update time every 30 seconds
+        setInterval(updateTime, 30000);
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Initialize tooltips if Bootstrap is loaded
+        if (typeof bootstrap !== 'undefined') {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+    </script>
+</body>
+</html>
