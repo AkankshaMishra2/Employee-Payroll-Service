@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.company.payroll.security.JwtAuthenticationFilter;
 import com.company.payroll.security.JwtAuthenticationSuccessHandler;
 import com.company.payroll.security.JwtUtil;
@@ -55,13 +56,13 @@ public class SecurityConfig {
                 )
                 // remove remember-me and session usage for stateless JWT approach
                 .sessionManagement(management -> management
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-    // Register JWT filter before username/password filter so API requests with Bearer token are authenticated
-    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        // Register JWT filter before username/password filter so API requests with Bearer token are authenticated
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
+        return http.build();
     }
 
     @Bean
