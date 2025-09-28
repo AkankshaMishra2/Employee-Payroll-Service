@@ -45,13 +45,28 @@
                         <h5>Quick Actions</h5>
                     </div>
                     <div class="card-body">
-                        <!-- Release result alert -->
-                        <div th:if="${param.released}" class="mb-3">
-                            <div th:if="${#numbers.parseInteger(param.released) > 0}" class="alert alert-success" role="alert">
-                                <span th:text="${param.released} + ' payroll(s) released successfully.'">Released</span>
-                            </div>
-                            <div th:if="${#numbers.parseInteger(param.released) == 0}" class="alert alert-info" role="alert">
-                                No pending payrolls were released.
+                        <!-- Release result toast -->
+                        <div aria-live="polite" aria-atomic="true" class="position-relative">
+                            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:1060;">
+                                <div th:if="${param.released != null}" id="releaseToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div th:if="${param.released == '1'}" class="toast-header bg-success text-white">
+                                        <strong class="me-auto">Payroll</strong>
+                                        <small>now</small>
+                                        <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div th:if="${param.released == '1'}" class="toast-body">
+                                        1 payroll released successfully.
+                                    </div>
+
+                                    <div th:if="${param.released != '1'}" class="toast-header bg-info text-dark">
+                                        <strong class="me-auto">Payroll</strong>
+                                        <small>now</small>
+                                        <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                    <div th:if="${param.released != '1'}" class="toast-body">
+                                        No pending payrolls were released. The selected payroll may already be paid or not found.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -84,6 +99,7 @@
                                     <th>Deductions</th>
                                     <th>Net Salary</th>
                                     <th>Pay Period</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -99,15 +115,15 @@
                                     <td th:text="${payroll.payPeriod}"></td>
                                     <td th:text="${payroll.status}"></td>
                                     <td style="white-space: nowrap;">
-                                        <a th:href="@{'/payrolls/edit/' + ${payroll.id}}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
-                                        <a th:if="${payroll.status != 'PAID'}" th:href="@{'/payrolls/pay/' + ${payroll.id}}" class="btn btn-sm btn-success me-1" 
-                                           onclick="return confirm('Release payment for this payroll?')">Pay</a>
-                                        <a th:href="@{'/payrolls/delete/' + ${payroll.employeeCode}}" class="btn btn-sm btn-danger" 
-                                           onclick="return confirm('Are you sure you want to delete this payroll record?')">Delete</a>
+                                                     <a th:href="@{/payrolls/edit/{id}(id=${payroll.id})}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                                     <a th:if="${payroll.status != 'PAID'}" th:href="@{/payrolls/pay/{id}(id=${payroll.id})}" class="btn btn-sm btn-success me-1" 
+                                                         onclick="return confirm('Release payment for this payroll?')">Pay</a>
+                                                     <a th:href="@{/payrolls/delete/{code}(code=${payroll.employeeCode})}" class="btn btn-sm btn-danger" 
+                                                         onclick="return confirm('Are you sure you want to delete this payroll record?')">Delete</a>
                                     </td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(payrolls)}">
-                                    <td colspan="9" class="text-center">No payroll records found</td>
+                                    <td colspan="10" class="text-center">No payroll records found</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -125,5 +141,14 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toastEl = document.getElementById('releaseToast');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                toast.show();
+            }
+        });
+    </script>
 </body>
 </html>
