@@ -37,7 +37,8 @@ cd payroll-service
 cd ..
 
 echo ""
-echo -e "${YELLOW}⏳ Waiting for Corporate Portal to initialize...${NC}"
+echo -e "${YELLOW}Waiting for Corporate Portal to initialize...${NC}"
+echo ""
 echo -e "${GRAY}This usually takes 20-30 seconds...${NC}"
 
 # Wait and check if Corporate Portal is ready
@@ -51,7 +52,7 @@ while [ $elapsed -lt $timeout ]; do
     # Check if health endpoint is responding
     if curl -s http://localhost:8080/health > /dev/null 2>&1; then
         echo ""
-        echo -e "${GREEN}✅ Corporate Portal is ready!${NC}"
+        echo -e "${GREEN}Corporate Portal is ready!${NC}"
         break
     fi
     
@@ -59,7 +60,7 @@ while [ $elapsed -lt $timeout ]; do
     
     if [ $elapsed -ge $timeout ]; then
         echo ""
-        echo -e "${YELLOW}⚠️  Timeout waiting for Corporate Portal. Continuing anyway...${NC}"
+        echo -e "${YELLOW}Timeout waiting for Corporate Portal. Continuing anyway...${NC}"
         break
     fi
 done
@@ -69,10 +70,10 @@ echo -e "${GREEN}============================================${NC}"
 echo -e "${GREEN}             Services Starting!${NC}"
 echo -e "${GREEN}============================================${NC}"
 echo ""
-echo -e "${CYAN}🌐 Corporate Portal: http://localhost:8080${NC}"
-echo -e "${BLUE}👥 Employee Portal:  http://localhost:8081${NC}"
-echo -e "${MAGENTA}💰 Payroll Portal:   http://localhost:8082${NC}"
+echo -e "${CYAN}Corporate Portal: http://localhost:8080${NC}"
+echo -e "${BLUE}Employee Portal:  http://localhost:8081${NC}"
+echo -e "${MAGENTA}Payroll Portal:   http://localhost:8082${NC}"
 echo ""
-echo -e "${WHITE}Opening Corporate Portal...${NC}"
-sleep 1
+echo -e "${WHITE}Press any key to open Corporate Portal...${NC}"
+read -n 1 -s
 open http://localhost:8080 2>/dev/null || xdg-open http://localhost:8080 2>/dev/null || echo "Please open http://localhost:8080 manually"

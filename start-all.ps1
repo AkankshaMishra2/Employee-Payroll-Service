@@ -19,7 +19,8 @@ Write-Host "[3/3] Starting Payroll Service (Port 8082)..." -ForegroundColor Yell
 Start-Process -FilePath "cmd" -ArgumentList "/c", "cd /d `"$currentDir\payroll-service`" && mvnw.cmd spring-boot:run" -WindowStyle Normal
 
 Write-Host ""
-Write-Host "⏳ Waiting for Corporate Portal to initialize..." -ForegroundColor Yellow
+Write-Host "Waiting for Corporate Portal to initialize..." -ForegroundColor Yellow
+Write-Host ""
 Write-Host "This usually takes 20-30 seconds..." -ForegroundColor Gray
 
 # Wait and check if Corporate Portal is ready
@@ -32,7 +33,7 @@ do {
         $response = Invoke-WebRequest -Uri "http://localhost:8080/health" -TimeoutSec 2 -ErrorAction SilentlyContinue
         if ($response.StatusCode -eq 200) { 
             Write-Host ""
-            Write-Host "✅ Corporate Portal is ready!" -ForegroundColor Green
+            Write-Host "Corporate Portal is ready!" -ForegroundColor Green
             break 
         }
     } catch { }
@@ -40,7 +41,7 @@ do {
     
     if ($elapsed -ge $timeout) {
         Write-Host ""
-        Write-Host "⚠️  Timeout waiting for Corporate Portal. Continuing anyway..." -ForegroundColor Yellow
+        Write-Host "Timeout waiting for Corporate Portal. Continuing anyway..." -ForegroundColor Yellow
         break
     }
 } while ($true)
@@ -50,9 +51,10 @@ Write-Host "============================================" -ForegroundColor Green
 Write-Host "             Services Starting!" -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "🌐 Corporate Portal: http://localhost:8080" -ForegroundColor Cyan
-Write-Host "👥 Employee Portal:  http://localhost:8081" -ForegroundColor Blue  
-Write-Host "💰 Payroll Portal:   http://localhost:8082" -ForegroundColor Magenta
+Write-Host "Corporate Portal: http://localhost:8080" -ForegroundColor Cyan
+Write-Host "Employee Portal:  http://localhost:8081" -ForegroundColor Blue  
+Write-Host "Payroll Portal:   http://localhost:8082" -ForegroundColor Magenta
 Write-Host ""
-Write-Host "Opening Corporate Portal..." -ForegroundColor White
+Write-Host "Press any key to open Corporate Portal..." -ForegroundColor White
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 Start-Process "http://localhost:8080"
