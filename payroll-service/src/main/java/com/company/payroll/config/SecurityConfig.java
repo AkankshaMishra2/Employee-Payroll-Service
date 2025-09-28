@@ -14,6 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.company.payroll.security.JwtAuthenticationFilter;
+import com.company.payroll.security.JwtAuthenticationSuccessHandler;
+import com.company.payroll.security.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -21,7 +25,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
+        // create JWT filter using injected JwtUtil bean
+        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwtUtil);
+        var successHandler = new JwtAuthenticationSuccessHandler(jwtUtil, "ACCESS-TOKEN");
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -36,27 +44,24 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults()) // Enable HTTP Basic Auth for API calls
                 .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/", true)
+                .successHandler(successHandler)
                 .permitAll()
                 )
                 .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID", "remember-me")
+                .deleteCookies("ACCESS-TOKEN")
                 .permitAll()
                 )
-                .rememberMe(remember -> remember
-                .key("payroll-service-remember-me-key")
-                .tokenValiditySeconds(2 * 60 * 60) // Remember for 2 hours
-                .userDetailsService(userDetailsService())
-                )
-                .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                .maximumSessions(10) // Increased concurrent sessions
-                .maxSessionsPreventsLogin(false)
+                // remove remember-me and session usage for stateless JWT approach
+                .sessionManagement(management -> management
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-        return http.build();
+
+    // Register JWT filter before username/password filter so API requests with Bearer token are authenticated
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
     }
 
     @Bean

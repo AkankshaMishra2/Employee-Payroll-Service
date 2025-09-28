@@ -9,57 +9,57 @@
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-center mt-5">
+        <div class="row vh-100 align-items-center justify-content-center">
             <div class="col-md-6 col-lg-4">
-                <div class="card border">
-                    <div class="card-header bg-transparent text-center py-4">
-                        <h3>Payroll Service</h3>
-                        <p class="mb-0">HR Login - Please sign in to continue</p>
-                    </div>
-                    <div class="card-body p-4">
-                        <form th:action="@{/login}" method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" 
-                                       placeholder="Enter username" required value="hr">
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" 
-                                       placeholder="Enter password" required>
-                            </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me" checked>
-                                <label class="form-check-label" for="remember-me">
-                                    <small>Remember me for 2 hours</small>
-                                </label>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-dark">Sign In</button>
-                            </div>
-                        </form>
-                        
-                        <div th:if="${param.error}" class="alert alert-light border mt-3" role="alert">
-                            Invalid username or password.
-                        </div>
-                        
-                        <div th:if="${param.logout}" class="alert alert-light border mt-3" role="alert">
-                            You have been logged out successfully.
-                        </div>
-                        
-                        <hr class="my-4">
-                        <div class="text-center">
-                            <small class="text-muted">
-                                <strong>HR & Payroll Management:</strong><br>
-                                Username: <strong>hr</strong> | Password: <strong>hr123</strong><br>
-                                <em>💡 Check "Remember me" to stay logged in for 2 hours!</em>
-                            </small>
-                        </div>
-                    </div>
-                    <div class="card-footer text-center text-muted">
-                        <small>&copy; 2025 Employee Payroll System - Payroll Service</small>
-                    </div>
+            <div class="card border">
+                <div class="card-header bg-transparent text-center py-4">
+                <h3>Payroll Service</h3>
+                <p class="mb-0">HR Login - Please sign in to continue</p>
                 </div>
+                <div class="card-body p-4">
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" 
+                           placeholder="Enter username" required value="hr">
+                    </div>
+                    <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" 
+                           placeholder="Enter password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me" checked>
+                    <label class="form-check-label" for="remember-me">
+                        <small>Remember me</small>
+                    </label>
+                    </div>
+                    <div class="d-grid">
+                    <button type="submit" class="btn btn-dark">Sign In</button>
+                    </div>
+                </form>
+                
+                <div th:if="${param.error}" class="alert alert-light border mt-3" role="alert">
+                    Invalid username or password.
+                </div>
+                
+                <div th:if="${param.logout}" class="alert alert-light border mt-3" role="alert">
+                    You have been logged out successfully.
+                </div>
+                
+                <hr class="my-4">
+                <div class="text-center">
+                    <small class="text-muted">
+                    <strong>HR & Payroll Management:</strong><br>
+                    Username: <strong>hr</strong> | Password: <strong>hr123</strong><br>
+                    <em>Check "Remember me" to stay longer</em>
+                    </small>
+                </div>
+                </div>
+                <div class="card-footer text-center text-muted">
+                <small>&copy; 2025 Employee Payroll System - Payroll Service</small>
+                </div>
+            </div>
             </div>
         </div>
     </div>
